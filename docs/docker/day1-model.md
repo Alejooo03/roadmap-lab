@@ -158,5 +158,5 @@ Port mapping is required to expose services to the host
 Containers are lightweight and meant to be easily removed
 
 This lab established a basic mental model for how Docker containers
-are created, run, inspected, and destroyed.
+are created, run, inspected, and destroyed
 
