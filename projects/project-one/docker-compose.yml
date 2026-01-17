@@ -5,6 +5,8 @@ services:
     build: ./backend
     ports:
       - "3000:3000"
+    environment:
+      - MONGO_URL=mongodb://mongo:27017
     depends_on:
       - mongo
 
@@ -17,3 +19,4 @@ services:
 
 volumes:
   mongo_data:
+

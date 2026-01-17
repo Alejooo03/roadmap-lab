@@ -1,0 +1,118 @@
+# Phase 3 – Backend Connection to MongoDB
+
+## Objective
+
+The goal of this phase was to connect the backend service to a MongoDB database running in a separate Docker container.
+
+At this stage, the system transitions from isolated services to a connected backend architecture capable of interacting with persistent data.
+
+---
+
+## Architecture Overview
+
+The system is composed of two main services:
+
+- Backend: Node.js HTTP server running inside a Docker container
+- Database: MongoDB running as an independent service using the official image
+
+Both services are orchestrated using Docker Compose and communicate through an internal Docker network.
+
+---
+
+## Database Connection Strategy
+
+The backend connects to MongoDB using the official MongoDB Node.js driver.
+
+The database connection is established before the server starts listening for requests.  
+If the database connection fails, the backend process exits instead of running in a degraded state.
+
+This ensures that the application does not operate without its required dependencies.
+
+---
+
+## Environment Variables
+
+The MongoDB connection string is provided to the backend through an environment variable:
+
+
+This variable is defined in the `docker-compose.yml` file and accessed in the backend using `process.env`.
+
+Using environment variables avoids hardcoding infrastructure details into the application code and aligns with production best practices.
+
+---
+
+MONGO_URL=mongodb://mongo:27017
+
+## Networking Between Containers
+
+Docker Compose automatically creates a shared network for all defined services.
+
+Within this network:
+- Each service can be accessed using its service name as a hostname
+- The backend connects to MongoDB using `mongo` as the hostname
+
+No external network configuration is required.
+
+---
+
+## Health Check Endpoint
+
+A `/health` endpoint was implemented in the backend to verify system status.
+
+When accessed, this endpoint:
+- Confirms that the server is running
+- Indicates that the database connection is active
+
+A successful response confirms that the backend and database are properly connected.
+
+---
+
+## Commands Used
+
+```bash
+docker-compose up --build
+
+
+Builds and starts all services defined in the Docker Compose configuration.
+
+docker ps
+
+
+Verifies that all containers are running.
+
+curl http://localhost:3000/health
+
+
+Tests the backend health endpoint.
+
+Observations and Learnings
+
+Services should fail fast if dependencies are unavailable
+
+Environment variables are essential for configurable systems
+
+Docker Compose simplifies multi-service orchestration
+
+Containers can communicate without exposing internal ports
+
+Infrastructure configuration should be versioned alongside code
+
+Current Limitations
+
+At this phase:
+
+No data is stored or retrieved from MongoDB
+
+No collections or schemas are defined
+
+No CRUD operations are implemented
+
+These aspects will be addressed in the next phase.
+
+Conclusion
+
+This phase establishes a functional backend system connected to a persistent database.
+
+The application now reflects a real-world backend architecture where services are isolated, configurable, and orchestrated as a unified system.
+
+
